@@ -2,8 +2,8 @@
 var express = require('express');
 var app = express();
 const path = require('path');
+const mongo = require('./mongo/index');
 
- 
 app.use(express.static(path.join(__dirname,'dist')));
 app.get('/',(req,res) =>{
     res.sendFile('./dist/index.html');
