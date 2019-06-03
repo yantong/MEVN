@@ -19,3 +19,5 @@
 /client/*.njsproj
 /client/*.sln
 /client/*.sw?
+
+/server/dist
