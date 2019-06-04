@@ -14,13 +14,14 @@
         content: '';
     }
 
-    .demo-ruleForm {
+    .demo-ruleFormReg {
         width: 375px;
         display: inline-block;
         vertical-align: middle;
         background-color: white;
         padding: 22px 22px 0 ;
         border-radius: 5px;
+        box-sizing: border-box;
     }
 
     .item label.el-form-item__label {
@@ -40,7 +41,7 @@
 
 <template>
     <div class="main">
-        <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm"  class="demo-ruleForm">
+        <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm"  class="demo-ruleFormReg">
             <h4>账号注册</h4>
             <el-divider></el-divider>
             <el-form-item  prop="account">
@@ -115,8 +116,11 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-              regest(this.ruleForm).then(res => {
-
+              regest(this.ruleForm).then(res => {                  
+                if(!res.data.success)
+                    this.$message.error(res.data.msg);
+                else
+                    this.$router.push({path: '/'});
               }).catch(e => {console.log(e);});
           } else {
             return false;

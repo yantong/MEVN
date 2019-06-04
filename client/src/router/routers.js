@@ -10,6 +10,11 @@ export default [
         component: () => import('../page/regest/index.vue')
     },
     {
+        path: '/home',
+        name: 'Home',
+        component: () => import('../page/main/index.vue')
+    },
+    {
         path: '*',
         name: '404',
         component: () => import('../page/404/index.vue')

@@ -2,9 +2,13 @@
 const express = require('express');
 const app = express();
 const path = require('path');
-const regist = require('./req/regist');
 const bodyParser = require("body-parser");
-const cookieParser = require('cookie-parser');//
+const cookieParser = require('cookie-parser');
+
+const regist = require('./req/regist');
+const login = require('./req/login');
+
+
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/runoob";
 
@@ -21,7 +25,8 @@ MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
     });
     
     regist(app,db);
-    
+    login(app,db);
+
     app.use((req, res, next) => {
         res.status(404).send('Not found');
     })
