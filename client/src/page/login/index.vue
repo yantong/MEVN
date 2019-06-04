@@ -34,11 +34,24 @@
 </style>
 
 <template>
-    <div class="main">    
+    <div class="main">  
+        <a href="#" @click="regest">注册</a>  
     </div>
 </template>
 
 <script>
   export default {
+      data(){
+          return {}
+      },
+      methods: {
+          regest(){
+            this.$router.push({
+                path: '/regest'
+            })
+
+            // this.$router.push({ path: 'regest', query: { plan: 'private' }})
+          }
+      }
   }
 </script>

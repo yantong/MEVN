@@ -1,15 +1,17 @@
-import Login from '../page/login/index.vue'
-import NotFound from '../page/404/index.vue'
-
 export default [
     {
         path: '/',
         name: 'Login',
-        component: Login,
+        component: () => import('../page/login/index.vue')
+    },
+    {
+        path: '/regest',
+        name: 'Regest',
+        component: () => import('../page/regest/index.vue')
     },
     {
         path: '*',
         name: '404',
-        component: NotFound,
+        component: () => import('../page/404/index.vue')
     }
 ]
