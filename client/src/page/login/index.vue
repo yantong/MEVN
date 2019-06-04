@@ -74,6 +74,13 @@
                         <template slot="append"><el-button style="padding:0 5px" type="text" @click="getMatchCode('phoneForm')">获取验证码</el-button></template>
                     </el-input>
                 </el-form-item>
+                <el-form-item  prop="picCode">
+                    <el-input placeholder="请输入图片码"  v-model="ruleForm.picCode" >
+                        <template slot="append">                
+                            <img :src="picCode" @click="getPicCode" alt="#">
+                        </template>             
+                    </el-input>
+                </el-form-item>
                 <el-form-item>
                     <el-button class="loginBt" type="primary" @click="submitForm('phoneForm')">登录</el-button>
                 </el-form-item>
@@ -85,7 +92,7 @@
 </template>
 
 <script>
-  import {login,getCode} from '../../../api/login.api';
+  import {login,getCode,phoneLogin,getPiccode} from '../../../api/login.api';
 
   export default {
       data(){
@@ -106,19 +113,29 @@
                 callback(new Error('请输入正确手机号'));
             else 
                 callback();
-        };var validatematchCode = (rule, value, callback) => {
+        };
+        var validatematchCode = (rule, value, callback) => {
+            // if (value === '')
+            //     callback(new Error('请输入验证码'));
+            // else 
+                callback();
+        };
+        var validatepicCode = (rule, value, callback) => {
             if (value === '')
-                callback(new Error('请输入验证码'));
+                callback(new Error('请输入图片码'));
             else 
                 callback();
         };
+
         return {
-            loginWay: 'phone',
+            loginWay: 'account',
+            picCode: '',
             ruleForm: {
                 pass: '',
                 account: '',
                 phoneNum:'',
-                matchCode: ''
+                matchCode: '',
+                picCode: ''
             },
             rules: {
                 pass: [
@@ -132,6 +149,9 @@
                 ],
                 matchCode: [
                     { validator: validatematchCode, trigger: 'blur' }
+                ],
+                picCode: [
+                    { validator: validatepicCode, trigger: 'blur' }
                 ]
             }
         };
@@ -145,7 +165,14 @@
           submitForm(formName) {
             this.$refs[formName].validate((valid) => {
             if (valid) {
-                login(this.ruleForm).then(res => {                  
+                let req;
+
+                if(this.loginWay == 'account')
+                    req = login(this.ruleForm);
+                else if(this.loginWay == 'phone')
+                    req = phoneLogin(this.ruleForm);
+
+                req.then(res => {                  
                     if(!res.data.success)
                         this.$message.error(res.data.msg);
                     else
@@ -163,13 +190,24 @@
                         if(!res.data.success)
                             this.$message.error(res.data.msg);
                         else
-                            this.$router.push({path: '/home'});
+                            this.$message.success('验证码已发送');
                     }).catch(e => {console.log(e);});
                 } else {
                     return false;
                 }
             });
+          },
+          getPicCode() {
+              getPiccode().then(res => {                  
+            if(!res.data.success)
+                this.$message.error(res.data.msg);
+            else
+                this.picCode = 'data:image/jpg;base64,'+ res.data.content;
+            }).catch(e => {console.log(e);});
           }
+      },
+      created(){
+          this.getPicCode();
       }
   }
 </script>

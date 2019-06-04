@@ -15,3 +15,18 @@ export const getCode = (params) => {
         data: params
     })
 }
+
+export const phoneLogin = (params) => {
+    return axios({
+        method: 'post',
+        url: '/phoneLogin',
+        data: params
+    })
+}
+
+export const getPiccode = (params) => {
+    return axios({
+        method: 'get',
+        url: '/getPiccode',
+    })
+}
