@@ -36,8 +36,7 @@ module.exports = (app,db) => {
     });
 
     app.post('/phoneLogin',(req,res) => {
-        // req.session.code == req.body.matchCode ||
-        if(req.session.picCode == req.body.picCode)
+        if(req.session.code == req.body.matchCode && req.session.picCode == req.body.picCode)
             res.end(JSON.stringify({
                 success: true,
                 msg:'登录成功'

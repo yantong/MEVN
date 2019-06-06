@@ -6,7 +6,7 @@
         text-align: center;
     }
 
-    div.main::before {
+    div.main::before, .type-devider::before {
         height: 100%;
         width: 0;
         display: inline-block;
@@ -14,7 +14,7 @@
         content: '';
     }
 
-    .demo-ruleForm {
+    .demo-ruleForm, .type-devider div {
         display: inline-block;
         vertical-align: middle;
     }
@@ -39,6 +39,20 @@
 
     .loginBt {
         width: 100%;
+    }
+
+    .type-devider {
+        margin: 22px 0;
+    }
+
+    .type-devider div {
+        display: inline-block;
+    }
+
+    .loginType img {
+        width: 44px;
+        height: 44px;
+        margin: 0 10px;
     }
 
 </style>
@@ -85,8 +99,21 @@
                     <el-button class="loginBt" type="primary" @click="submitForm('phoneForm')">登录</el-button>
                 </el-form-item>
             </el-form> 
-            <br>
-            <a href="#" @click="regest">注册</a>
+            <div class="type-devider">
+                <div style="width: 33.3%;height: 1px;backgroundColor: #898989"></div>
+                <div style="width: 33.4%;color: #898989">其他方式</div>
+                <div style="width: 33.3%;height: 1px;backgroundColor: #898989"></div>
+            </div>
+            <div class="loginType">
+                <img v-if="loginWay == 'phone'" src="../../assets/icon_mail_pc.svg" alt="#">
+                <img v-if="loginWay == 'account'" src="../../assets/icon_phone_pc.svg" alt="#">
+                <img src="../../assets/icon_qq_pc.svg" alt="#">
+                <img src="../../assets/icon_weixin_pc.svg" alt="#">
+            </div>
+            <div>
+                <a style="float: left;textDecoration: none;fontSize: 12px;color: #406599;" href="#" @click="regest">注册</a>
+                <a style="float: right;textDecoration: none;fontSize: 12px;color: #406599;" href="#" @click="findPass">忘记密码</a>
+            </div>
         </div>
     </div>
 </template>
@@ -128,7 +155,7 @@
         };
 
         return {
-            loginWay: 'account',
+            loginWay: 'phone',
             picCode: '',
             ruleForm: {
                 pass: '',
@@ -161,6 +188,9 @@
             this.$router.push({
                 path: '/regest'
             })
+          },
+          findPass(){
+
           },
           submitForm(formName) {
             this.$refs[formName].validate((valid) => {
