@@ -15,6 +15,11 @@ export default [
         component: () => import('../page/main/index.vue')
     },
     {
+        path: '/findPsd',
+        name: 'findPsd',
+        component: () => import('../page/findPsd/index.vue')
+    },
+    {
         path: '*',
         name: '404',
         component: () => import('../page/404/index.vue')

@@ -63,28 +63,41 @@
             <el-form  :model="ruleForm" status-icon :rules="rules" ref="ruleForm" class="accountForm">
                 <h4>账号密码登录</h4>
                 <el-divider></el-divider>
-                <el-form-item  prop="account">
+                <el-form-item  prop="account" key="accountAccount">
                     <el-input placeholder="请输入账号" v-model="ruleForm.account"></el-input>
                 </el-form-item>
-                <el-form-item  prop="pass">
+                <el-form-item  prop="pass" key="accountPass">
                     <el-input placeholder="请输入密码" type="password" v-model="ruleForm.pass" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item>
                     <el-button class="loginBt" type="primary" @click="submitForm('ruleForm')">登录</el-button>
                 </el-form-item>
             </el-form> 
-            <br>
-            <a href="#" @click="regest">注册</a>
+            <div class="type-devider">
+                <div style="width: 33.3%;height: 1px;backgroundColor: #898989"></div>
+                <div style="width: 33.4%;color: #898989">其他方式</div>
+                <div style="width: 33.3%;height: 1px;backgroundColor: #898989"></div>
+            </div>
+            <div class="loginType">
+                <img @click="changloginway('account')" v-if="loginWay == 'phone'" src="../../assets/icon_mail_pc.svg" alt="#">
+                <img @click="changloginway('phone')" v-if="loginWay == 'account'" src="../../assets/icon_phone_pc.svg" alt="#">
+                <img src="../../assets/icon_qq_pc.svg" alt="#">
+                <img src="../../assets/icon_weixin_pc.svg" alt="#">
+            </div>
+            <div>
+                <a style="float: left;textDecoration: none;fontSize: 12px;color: #406599;" href="#" @click="regest">注册</a>
+                <a style="float: right;textDecoration: none;fontSize: 12px;color: #406599;" href="#" @click="findPass">忘记密码</a>
+            </div>        
         </div>
         <div class="demo-ruleForm" v-if="loginWay == 'phone'">
             <el-form :model="ruleForm" status-icon :rules="rules" ref="phoneForm" class="accountForm">
                 <h4>手机验证码登录</h4>
                 <el-divider></el-divider>
-                <el-form-item  prop="phoneNum">
+                <el-form-item  prop="phoneNum" key="phoneNum">
                     <el-input placeholder="请输入手机号" v-model="ruleForm.phoneNum"></el-input>
                 </el-form-item>
-                <el-form-item  prop="matchCode">
-                    <el-input placeholder="请输入验证码"  v-model="ruleForm.matchCode" >
+                <el-form-item  prop="matchCode" key="phoneMatchCode">
+                    <el-input placeholder="请输入验证码"  v-model="ruleForm.matchCode">
                         <template slot="append"><el-button style="padding:0 5px" type="text" @click="getMatchCode('phoneForm')">获取验证码</el-button></template>
                     </el-input>
                 </el-form-item>
@@ -105,8 +118,8 @@
                 <div style="width: 33.3%;height: 1px;backgroundColor: #898989"></div>
             </div>
             <div class="loginType">
-                <img v-if="loginWay == 'phone'" src="../../assets/icon_mail_pc.svg" alt="#">
-                <img v-if="loginWay == 'account'" src="../../assets/icon_phone_pc.svg" alt="#">
+                <img @click="changloginway('account')" v-if="loginWay == 'phone'" src="../../assets/icon_mail_pc.svg" alt="#">
+                <img @click="changloginway('phone')" v-if="loginWay == 'account'" src="../../assets/icon_phone_pc.svg" alt="#">
                 <img src="../../assets/icon_qq_pc.svg" alt="#">
                 <img src="../../assets/icon_weixin_pc.svg" alt="#">
             </div>
@@ -155,7 +168,7 @@
         };
 
         return {
-            loginWay: 'phone',
+            loginWay: 'account',
             picCode: '',
             ruleForm: {
                 pass: '',
@@ -190,7 +203,12 @@
             })
           },
           findPass(){
-
+            this.$router.push({
+                path: '/findPsd'
+            })
+          },
+          changloginway(loginWay) {
+            this.loginWay = loginWay;
           },
           submitForm(formName) {
             this.$refs[formName].validate((valid) => {
