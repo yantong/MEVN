@@ -1,9 +1,12 @@
 module.exports = (app,db) => {
     app.post('/editSelfData',(req,res) =>{
 
+        console.log(req.body);
+        
         res.set('Content-Type','text/plain');
         res.end(JSON.stringify({
-            success: true
+            success: true,
+            image: req.body.image
         })); 
         return ;
         

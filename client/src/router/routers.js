@@ -15,6 +15,11 @@ export default [
         component: () => import('../page/main/index.vue'),
         children: [
             {
+                path: '/content',
+                name: 'homeIndex',
+                component: () => import('../page/main/home.vue')
+            },
+            {
                 path: '/editSelfData',
                 name: 'editSelfData',
                 component: () => import('../page/editSelfData/index.vue')

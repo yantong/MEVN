@@ -224,7 +224,7 @@
                     if(!res.data.success)
                         this.$message.error(res.data.msg);
                     else
-                        this.$router.push({path: '/home'});
+                        this.$router.push({ name: 'homeIndex' });
                 }).catch(e => {console.log(e);});
             } else {
                 return false;

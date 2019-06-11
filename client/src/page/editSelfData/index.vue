@@ -1,20 +1,5 @@
 <style >
-    div.main {
-        height: 100vh;
-        overflow: hidden;
-        background: url('../../assets/login.png');
-        text-align: center;
-    }
-
-    div.main::before {
-        height: 100%;
-        width: 0;
-        display: inline-block;
-        vertical-align: middle;
-        content: '';
-    }
-
-    .demo-ruleForm {
+    .editSelfDataForm {
         width: 375px;
         display: inline-block;
         vertical-align: middle;
@@ -47,12 +32,11 @@
         height: 178px;
         display: block;
     }
-
 </style>
 
 <template>
     <div>  
-        <el-form :model="selfDataForm" ref="selfDataForm" label-width="100px" class="demo-ruleForm">
+        <el-form :model="selfDataForm" ref="selfDataForm" label-width="100px" class="editSelfDataForm">
             <el-form-item
                 label="用户名"
                 prop="name"
@@ -87,13 +71,15 @@
 
 <script>
   import { editSelfData } from '../../../api/editSelfData.api';
+  import * as util from '../../../util'
 
   export default {
     data() {
       return {
         selfDataForm: {
           name: '',
-          imageUrl: ''
+          imageUrl: '',
+          img: ''
         }
       };
     },
@@ -104,16 +90,25 @@
           if (valid) {
               let params = {
                   name: _this.selfDataForm.name,
-                  imageUrl: _this.selfDataForm.imageUrl
+                  image: _this.selfDataForm.img,
+                  account: util.getCookie('account')
               };
 
-              console.log(params);
+            //   let params = new FormData();
+            //   params.append('name', _this.selfDataForm.name);
+            //   params.append('picFile',  _this.selfDataForm.img);
+            //   params.append('account', util.getCookie('account'))
 
+              console.log(params);
               editSelfData(params).then(res => {
-                // if(!res.data.success)
-                //     _this.$message.error(res.data.msg);
-                // else
-                //     _this.$router.push({path: '/home'});
+                if(!res.data.success)
+                    _this.$message.error(res.data.msg);
+                else
+                {
+                    console.log(res.data.image);
+                    this.selfDataForm.imageUrl = window.URL.createObjectURL(res.data.image);
+                    // _this.$router.push({ name: 'homeIndex' });
+                }
               })
           } else {
             return false;
@@ -123,6 +118,7 @@
       handleAvatarSuccess(res, file) {
       },
       beforeAvatarUpload(file) {
+        const _this = this;
         const isJPG = file.type === 'image/jpeg' || file.type === 'image/png';
         const isLt2M = file.size / 1024 / 1024 < 2;
 
@@ -134,7 +130,9 @@
           this.$message.error('上传头像图片大小不能超过 2MB!');
           return false;
         }
-        this.selfDataForm.imageUrl = window.URL.createObjectURL(file);
+
+        this.selfDataForm.img = file;
+        this.selfDataForm.imageUrl = '21'; //window.URL.createObjectURL(file);
 
         return false;
       }
