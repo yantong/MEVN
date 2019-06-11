@@ -12,13 +12,21 @@ export default [
     {
         path: '/home',
         name: 'Home',
-        component: () => import('../page/main/index.vue')
+        component: () => import('../page/main/index.vue'),
+        children: [
+            {
+                path: '/editSelfData',
+                name: 'editSelfData',
+                component: () => import('../page/editSelfData/index.vue')
+            },
+          ]
     },
     {
         path: '/findPsd',
         name: 'findPsd',
         component: () => import('../page/findPsd/index.vue')
     },
+    
     {
         path: '*',
         name: '404',
