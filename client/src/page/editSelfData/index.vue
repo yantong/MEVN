@@ -88,26 +88,16 @@
         const _this = this;
         _this.$refs[formName].validate((valid) => {
           if (valid) {
-              let params = {
-                  name: _this.selfDataForm.name,
-                  image: _this.selfDataForm.img,
-                  account: util.getCookie('account')
-              };
+              let params = new FormData();
+              params.append('name', _this.selfDataForm.name);
+              params.append('picFile',  _this.selfDataForm.img);
 
-            //   let params = new FormData();
-            //   params.append('name', _this.selfDataForm.name);
-            //   params.append('picFile',  _this.selfDataForm.img);
-            //   params.append('account', util.getCookie('account'))
-
-              console.log(params);
               editSelfData(params).then(res => {
                 if(!res.data.success)
                     _this.$message.error(res.data.msg);
                 else
                 {
-                    console.log(res.data.image);
-                    this.selfDataForm.imageUrl = window.URL.createObjectURL(res.data.image);
-                    // _this.$router.push({ name: 'homeIndex' });
+                    _this.$message.success("设置成功");
                 }
               })
           } else {
@@ -132,7 +122,7 @@
         }
 
         this.selfDataForm.img = file;
-        this.selfDataForm.imageUrl = '21'; //window.URL.createObjectURL(file);
+        this.selfDataForm.imageUrl = window.URL.createObjectURL(file);
 
         return false;
       }

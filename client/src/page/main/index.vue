@@ -32,18 +32,25 @@
         <div class="head">
             <div class="content">
                 <el-image style="width: 30px; height: 30px;borderRadius: 15px;"  @click="editSelfData"
-                    src="http://p1.music.126.net/UxWFtuLxyLyS9WKCx87ZTQ==/1371091010352210.jpg?param=30y30" fit="cover"></el-image>
+                    :src="headPicUrl" fit="cover"></el-image>
             </div>
         </div>
         <router-view></router-view>
     </div>
 </template>
 
-<script>
+<script> 
+  import * as util from '../../../util'
+
   export default {
       data(){
         return {
         };
+      },
+      computed: {
+          headPicUrl(){
+            return '/headPic/' + util.getCookie("account");
+          }
       },
       methods: {
           editSelfData() {

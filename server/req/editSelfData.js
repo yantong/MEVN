@@ -1,41 +1,65 @@
+const Busboy = require('busboy');
+const mongo = require('mongodb')
+inspect = require('util').inspect;
+
 module.exports = (app,db) => {
-    app.post('/editSelfData',(req,res) =>{
-
-        console.log(req.body);
+    app.post('/editSelfData',(req,res) =>{   
+        let busboy = new Busboy({ headers : req.headers });
+        let dbase = db.db("MEVN");
+        var bucket = new mongo.GridFSBucket(dbase);
         
-        res.set('Content-Type','text/plain');
-        res.end(JSON.stringify({
-            success: true,
-            image: req.body.image
-        })); 
-        return ;
-        
+        req.pipe(busboy); 
 
-        var dbase = db.db("MEVN");
-
-        dbase.collection("users").find({account:req.body.account}).toArray(function(err, result) {
-            if (err) throw err;
-
-            if(result.length == 0)
+        busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated, encoding, mimetype) {
+            if(req.cookies.account && fieldname == 'name')
             {
-                dbase.collection("users").insertOne({account:req.body.account,pass:req.body.pass}, function(err, result) {
-                    if (err) throw err;
+                var whereStr = {"account": req.cookies.account};  // 查询条件
+                var updateStr = {$set: { "name" : inspect(val)}};
 
-                    res.set('Content-Type','text/plain');
-                    res.end(JSON.stringify({
-                        success: true,
-                        msg:'账号创建成功'
-                    }));
+                dbase.collection("users").updateOne(whereStr, updateStr, function(err, result) {
+                    if (err) throw err;
                 });
             }
-            else
-            {
-                res.set('Content-Type','text/plain');
-                res.end(JSON.stringify({
-                    success: false,
-                    msg:'账号已存在'
-                })); 
-            }            
         });
+        busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
+            if(req.cookies.account)
+            {
+                dbase.collection("fs.files").find({filename:req.cookies.account + 'headPic'}).toArray(function(err, result) {
+                    async function delSameFile(result) {                        
+                        for (let index = 0; index < result.length; index++) {
+                            const element = result[index];
+                            let res = await dbase.collection("fs.files").findOneAndDelete({_id: element._id});
+                            let datas = await dbase.collection("fs.chunks").find({files_id: element._id});
+                            let chunks = await datas.toArray();
+
+                            console.log(chunks);
+                            for (let i = 0; i < chunks.length; i++) {
+                                let res = await dbase.collection("fs.chunks").findOneAndDelete({_id: chunks[i]._id});
+                                console.log(res);
+                            }
+                        }
+
+                        file.pipe(bucket.openUploadStream(req.cookies.account + 'headPic'));
+                        file.on('end', function () {});
+                    } 
+
+                    delSameFile(result);                    
+                });
+            }
+        });
+        busboy.on('finish', function() {
+            res.end(JSON.stringify({
+                success: true,
+            })); 
+        });        
+    });
+
+    app.get('/headPic/:account',(req,res) =>{   
+        let dbase = db.db("MEVN");
+        var bucket = new mongo.GridFSBucket(dbase);
+        let picName = req.params.account + 'headPic';
+
+        bucket.openDownloadStreamByName(picName)
+        .pipe(res);
     });
 }
