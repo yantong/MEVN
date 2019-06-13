@@ -25,8 +25,8 @@ module.exports = (app,db) => {
             if(result[0].pass == req.body.pass)
             {
                 var min = 60 * 1000;
-                res.cookie('login',true,{ expires: new Date(Date.now() + min * 10)});
-                res.cookie('account',req.body.account,{ expires: new Date(Date.now() + min * 10)});
+                res.cookie('login',true,{ expires: new Date(Date.now() + min * 60)});
+                res.cookie('account',req.body.account,{ expires: new Date(Date.now() + min * 60)});
                 res.end(JSON.stringify({
                     success: true,
                     msg:'登录成功'

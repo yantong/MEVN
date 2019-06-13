@@ -10,6 +10,11 @@ export default [
         component: () => import('../page/regest/index.vue')
     },
     {
+        path: '/findPsd',
+        name: 'findPsd',
+        component: () => import('../page/findPsd/index.vue')
+    },
+    {
         path: '/home',
         name: 'Home',
         component: () => import('../page/main/index.vue'),
@@ -25,13 +30,7 @@ export default [
                 component: () => import('../page/editSelfData/index.vue')
             },
           ]
-    },
-    {
-        path: '/findPsd',
-        name: 'findPsd',
-        component: () => import('../page/findPsd/index.vue')
-    },
-    
+    },    
     {
         path: '*',
         name: '404',

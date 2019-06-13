@@ -199,12 +199,12 @@
       methods: {
           regest(){
             this.$router.push({
-                path: '/regest'
-            })
+                name: 'Regest'
+            });
           },
           findPass(){
             this.$router.push({
-                path: '/findPsd'
+                name: 'findPsd'
             })
           },
           changloginway(loginWay) {

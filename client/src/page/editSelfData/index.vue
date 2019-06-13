@@ -98,6 +98,9 @@
                 else
                 {
                     _this.$message.success("设置成功");
+                     this.$router.push({
+                        name: 'homeIndex'
+                    })
                 }
               })
           } else {

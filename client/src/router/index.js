@@ -14,7 +14,7 @@ router.beforeEach((to, from, next) => {
   {    
     next({ name: 'homeIndex' })
   }
-  else if(to.name != 'Login' && !util.getCookie('login'))
+  else if(to.name != 'Login' && to.name != 'Regest' && to.name != 'findPsd' && !util.getCookie('login'))
   {    
     next({ path: '/' })
   }

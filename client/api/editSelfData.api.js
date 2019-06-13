@@ -7,3 +7,10 @@ export const editSelfData = (params) => {
         data: params
     })
 }
+
+export const selfData = () => {
+    return axios({
+        method: 'get',
+        url: '/selfData',
+    })
+}

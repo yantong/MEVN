@@ -1,5 +1,5 @@
-// const { CleanWebpackPlugin }= require('clean-webpack-plugin');
-// const path = require('path');
+const { CleanWebpackPlugin }= require('clean-webpack-plugin');
+const path = require('path');
 
 module.exports = {
     // 基本路径
@@ -8,10 +8,10 @@ module.exports = {
     outputDir: '../server/dist',
     lintOnSave: false,
     configureWebpack: {
-        // plugins: [
-        //     new CleanWebpackPlugin({
-        //         root: path.join(__dirname, '../server/dist')
-        //     })
-        // ]
+        plugins: [
+            new CleanWebpackPlugin({
+                root: path.join(__dirname, '../server/dist')
+            })
+        ]
     }
 }
