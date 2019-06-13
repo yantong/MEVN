@@ -43,7 +43,7 @@ MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
         res.status(404).send('Not found');
     })
       
-    var server = app.listen(3000, function () {
+    var server = app.listen(5000, function () {
         var port = server.address().port
        
         console.log("应用实例，访问地址为 http://localhost:%s", port)
