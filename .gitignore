@@ -2,6 +2,7 @@
 /client/node_modules
 /server/node_modules
 /NeteaseCloudMusicApi/node_modules
+/musicList/node_modules
 /client/dist
 
 # local env files
