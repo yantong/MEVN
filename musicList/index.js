@@ -2,14 +2,16 @@ const axios = require('axios');
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/runoob";
 
+// http://localhost:3000  http://musicapi.leanapp.cn
+
 MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
     if (err) throw err;
 
     let dbase = db.db("MEVN");
 
     // 5001
-    let songerTypes = [4001,4002,4003];
-    // let songerTypes = [1001,1002,1003,2001,2002,2003,6001,6002,6003,7001,7002,7003,];
+    let songerTypes = [1001];
+    // let songerTypes = [1001,1002,1003,2001,2002,2003,6001,6002,6003,7001,7002,7003,4001,4002,4003];
 
     (async function () {
         for (const index in songerTypes) {
@@ -25,11 +27,11 @@ MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
             {
                 let res = await axios({
                     method: 'get',
-                    url: `http://musicapi.leanapp.cn/artist/list?cat=${songerType}&limit=${limit}&offset=${offset}`, 
+                    url: `http://localhost:3000/artist/list?cat=${songerType}&limit=${limit}&offset=${offset}`, 
                 }).catch(e => {console.log(e);});
 
                 let array = (res && res.data && res.data.artists) ? res.data.artists : null;
-                if(!array || array.length == 0 || offset > 100)
+                if(!array || array.length == 0)
                 {
                     searchFinish = true;
                 }
@@ -50,11 +52,11 @@ MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
                         {
                             let res = await axios({
                                 method: 'get',
-                                url: `http://musicapi.leanapp.cn/artist/album?id=${element.id}&limit=${songlimit}&offset=${songoffset}`, 
+                                url: `http://localhost:3000/artist/album?id=${element.id}&limit=${songlimit}&offset=${songoffset}`, 
                             }).catch(e => {console.log(e);});
 
                             let songsArray = (res && res.data && res.data.hotAlbums) ? res.data.hotAlbums : null;
-                            if(!songsArray || songsArray.length == 0 || songoffset > 100)
+                            if(!songsArray || songsArray.length == 0)
                             {
                                 songSearchFinish = true;
                             }
@@ -65,8 +67,11 @@ MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
 
                                     let res = await axios({
                                         method: 'get',
-                                        url: `http://musicapi.leanapp.cn/album?id=${element.id}`, 
+                                        url: `http://localhost:3000/album?id=${element.id}`, 
                                     }).catch(e => {console.log(e);});
+
+                                    // console.log(res);
+                                    
 
                                     
 

@@ -7,3 +7,21 @@ export const searchSingleMusic = (params) => {
         data: params
     })
 }
+
+export const searchSonger = (params) => {
+    return axios({
+        method: 'post',
+        url: '/searchSonger',
+        data: params
+    })
+}
+
+
+export const searchAibum = (params) => {
+    return axios({
+        method: 'post',
+        url: '/searchAibum',
+        data: params
+    })
+}
+

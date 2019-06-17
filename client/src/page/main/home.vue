@@ -34,46 +34,34 @@
           </el-table>
         </el-tab-pane>
 
-        <el-tab-pane label="歌手" name="songer">
+        <el-tab-pane label="歌手" name="songer"> 
           <el-table
-            :data="tableData">
+            :data="tableData2">
             <el-table-column
               prop="name"
               label="歌名">
             </el-table-column>
             <el-table-column
-              prop="tip"
               label="歌手">
-            </el-table-column>
-            <el-table-column
-              label="操作"
-              width="180">
-                <template slot-scope="scope">
-                  <el-button
-                    @click="playMusic(scope.$index, scope.row)">播放</el-button>
-                </template>
+              <template slot-scope="scope">
+                  <el-image style="width: 40px; height: 40px" :src="scope.row.picUrl" it="cover"></el-image>
+              </template>
             </el-table-column>
           </el-table>
         </el-tab-pane>
 
         <el-tab-pane label="专辑" name="aibum">
           <el-table
-            :data="tableData">
+            :data="tableData3">
             <el-table-column
               prop="name"
               label="歌名">
             </el-table-column>
             <el-table-column
-              prop="tip"
               label="歌手">
-            </el-table-column>
-            <el-table-column
-              label="操作"
-              width="180">
-                <template slot-scope="scope">
-                  <el-button
-                    @click="playMusic(scope.$index, scope.row)">播放</el-button>
-                </template>
+              <template slot-scope="scope">
+                  <el-image style="width: 40px; height: 40px" :src="scope.row.picUrl" it="cover"></el-image>
+              </template>
             </el-table-column>
           </el-table>
         </el-tab-pane>
@@ -91,12 +79,14 @@
           activeName: 'singleMusic',
           searchMusic: '',
           tableData: [],
+          tableData2: [],
+          tableData3: [],
         };
       },
       methods: {
         handleClick(tab, event) {
         },
-        seach(selTab,value) {
+        singleMusic(value) {
           musicSearch.searchSingleMusic({
                 musicName: value,
             }).then(res => {
@@ -117,6 +107,58 @@
             }).catch(e => {
               console.log(e);
             })
+        },
+        searchSonger(value) {
+          musicSearch.searchSonger({
+                musicName: value,
+            }).then(res => {
+              
+               if(!res.data.success)
+                  this.$message.error(res.data.msg);
+              else
+              {
+                console.log(res.data);
+                
+                let array = res.data.music;
+
+                this.tableData2 = [];
+                array.forEach(element => {
+                    this.tableData2.push({name: element.name,id: element.id,picUrl: element.picUrl})
+                });
+              }              
+            }).catch(e => {
+              console.log(e);
+            })
+        },
+        searchAibum(value) {
+          musicSearch.searchAibum({
+                musicName: value,
+            }).then(res => {
+              
+               if(!res.data.success)
+                  this.$message.error(res.data.msg);
+              else
+              {
+                console.log(res.data);
+                
+                let array = res.data.music;
+
+                this.tableData3 = [];
+                array.forEach(element => {
+                    this.tableData3.push({name: element.name,id: element.id,picUrl: element.picUrl})
+                });
+              }              
+            }).catch(e => {
+              console.log(e);
+            })
+        },
+        seach(selTab,value) {          
+          if(selTab == 'singleMusic')
+            this.singleMusic(value)
+          else if(selTab == 'songer')
+            this.searchSonger(value)
+          else if(selTab == 'aibum')
+            this.searchAibum(value)
         },
         playMusic(index, row) {
           axios({
