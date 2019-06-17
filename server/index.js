@@ -10,6 +10,7 @@ const regist = require('./req/regist');
 const login = require('./req/login');
 const findpsd = require('./req/findpsd');
 const editSelfData = require('./req/editSelfData');
+const musicSearch = require('./req/musicSearch');
 
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/runoob";
@@ -38,6 +39,7 @@ MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
     login(app,db);
     findpsd(app,db);
     editSelfData(app,db);
+    musicSearch(app,db);
 
     app.use((req, res, next) => {
         res.status(404).send('Not found');

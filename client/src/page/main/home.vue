@@ -1,6 +1,5 @@
 <style >
   .searchClass{
-    /* border: 1px solid #c5c5c5; */
     border-radius: 20px;
     width: 150px;
   }
@@ -9,57 +8,114 @@
 <template>
     <div >  
       <br>
-      <el-input placeholder="请输入内容" prefix-icon="el-icon-search" @change="seach" style="width: 150px;" v-model="searchMusic"></el-input>
+      <el-input placeholder="请输入内容" prefix-icon="el-icon-search" @change="seach(activeName,$event)" style="width: 150px;" v-model="searchMusic"></el-input>
       <br><br>
-      <audio :src="musicUrl" autoplay controls></audio>
-      <br><br>
-      <el-table
-        :data="tableData"
-        style="width: 50%;margin: 0 auto">
-        <el-table-column
-          prop="name"
-          label="歌名">
-        </el-table-column>
-        <el-table-column
-          prop="tip"
-          label="歌手">
-        </el-table-column>
-        <el-table-column
-          label="操作"
-          width="180">
-            <template slot-scope="scope">
-              <el-button
-                @click="playMusic(scope.$index, scope.row)">播放</el-button>
-            </template>
-        </el-table-column>
-      </el-table>
+      <el-tabs v-model="activeName" @tab-click="handleClick">
+
+        <el-tab-pane label="单曲" name="singleMusic">
+          <el-table
+            :data="tableData">
+            <el-table-column
+              prop="name"
+              label="歌名">
+            </el-table-column>
+            <el-table-column
+              prop="tip"
+              label="歌手">
+            </el-table-column>
+            <el-table-column
+              label="操作"
+              width="180">
+                <template slot-scope="scope">
+                  <el-button
+                    @click="playMusic(scope.$index, scope.row)">播放</el-button>
+                </template>
+            </el-table-column>
+          </el-table>
+        </el-tab-pane>
+
+        <el-tab-pane label="歌手" name="songer">
+          <el-table
+            :data="tableData">
+            <el-table-column
+              prop="name"
+              label="歌名">
+            </el-table-column>
+            <el-table-column
+              prop="tip"
+              label="歌手">
+            </el-table-column>
+            <el-table-column
+              label="操作"
+              width="180">
+                <template slot-scope="scope">
+                  <el-button
+                    @click="playMusic(scope.$index, scope.row)">播放</el-button>
+                </template>
+            </el-table-column>
+          </el-table>
+        </el-tab-pane>
+
+        <el-tab-pane label="专辑" name="aibum">
+          <el-table
+            :data="tableData">
+            <el-table-column
+              prop="name"
+              label="歌名">
+            </el-table-column>
+            <el-table-column
+              prop="tip"
+              label="歌手">
+            </el-table-column>
+            <el-table-column
+              label="操作"
+              width="180">
+                <template slot-scope="scope">
+                  <el-button
+                    @click="playMusic(scope.$index, scope.row)">播放</el-button>
+                </template>
+            </el-table-column>
+          </el-table>
+        </el-tab-pane>
+    </el-tabs>
     </div>
 </template>
 
 <script>
   import axios from 'axios';
+  import * as musicSearch from '../../../api/musicSearch.api';
 
   export default {
       data(){
         return {
-          searchMusic: '情非得已',
+          activeName: 'singleMusic',
+          searchMusic: '',
           tableData: [],
-          musicUrl: 'http://m10.music.126.net/20190613214119/dff38ba0228ec712d24257c9e0598e5e/ymusic/0fd6/4f65/43ed/a8772889f38dfcb91c04da915b301617.mp3'
         };
       },
       methods: {
-        seach(value) {
-          axios({
-                method: 'get',
-                url: `http://localhost:3000/search?keywords= ${value}`, 
+        handleClick(tab, event) {
+        },
+        seach(selTab,value) {
+          musicSearch.searchSingleMusic({
+                musicName: value,
             }).then(res => {
-              let array = res.data.result.songs;
+              
+               if(!res.data.success)
+                  this.$message.error(res.data.msg);
+              else
+              {
+                console.log(res.data);
+                
+                let array = res.data.music;
 
-              this.tableData = [];
-              array.forEach(element => {
-                // if(this.tableData.length < 10)
-                  this.tableData.push({name: element.name,id: element.id,tip: element.artists[0].name})
-              });
+                this.tableData = [];
+                array.forEach(element => {
+                    this.tableData.push({name: element.name,id: element.id,tip: element.ar[0].name})
+                });
+              }              
+            }).catch(e => {
+              console.log(e);
             })
         },
         playMusic(index, row) {
@@ -70,7 +126,11 @@
               let data = res.data.data;
 
               if(data.length)
-                this.musicUrl = data[0].url;
+              {
+                this.$emit('updateMusicUrl',data[0].url)
+              }
+            }).catch(e => {
+              console.log(e);
             })
         }
       },

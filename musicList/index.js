@@ -8,14 +8,14 @@ MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
     let dbase = db.db("MEVN");
 
     // 5001
-    let songerTypes = [1001,1002,1003,2001,2002,2003,6001,6002,6003,7001,7002,7003,4001,4002,4003];
-    // let songerTypes = [1001];
+    let songerTypes = [4001,4002,4003];
+    // let songerTypes = [1001,1002,1003,2001,2002,2003,6001,6002,6003,7001,7002,7003,];
 
     (async function () {
         for (const index in songerTypes) {
             let songerType = songerTypes[index];
             let searchFinish = false;
-            let limit = 30;
+            let limit = 20;
             let offset = 0;
 
             //要对error做处理
@@ -25,12 +25,11 @@ MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
             {
                 let res = await axios({
                     method: 'get',
-                    url: `http://localhost:3000/artist/list?cat=${songerType}&limit=${limit}&offset=${offset}`, 
-                })
+                    url: `http://musicapi.leanapp.cn/artist/list?cat=${songerType}&limit=${limit}&offset=${offset}`, 
+                }).catch(e => {console.log(e);});
 
-                let array = res.data.artists;
-
-                if(!array || array.length == 0 || offset > 10)
+                let array = (res && res.data && res.data.artists) ? res.data.artists : null;
+                if(!array || array.length == 0 || offset > 100)
                 {
                     searchFinish = true;
                 }
@@ -44,19 +43,18 @@ MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
                         });
 
                         let songSearchFinish = false;
-                        let songlimit = 30;
+                        let songlimit = 20;
                         let songoffset = 0;
 
                         while (!songSearchFinish)
                         {
                             let res = await axios({
                                 method: 'get',
-                                url: `http://localhost:3000/artist/album?id=${element.id}&limit=${songlimit}&offset=${songoffset}`, 
-                            })
+                                url: `http://musicapi.leanapp.cn/artist/album?id=${element.id}&limit=${songlimit}&offset=${songoffset}`, 
+                            }).catch(e => {console.log(e);});
 
-                            let songsArray = res.data.hotAlbums;
-
-                            if(!songsArray || songsArray.length == 0 || songoffset > 10)
+                            let songsArray = (res && res.data && res.data.hotAlbums) ? res.data.hotAlbums : null;
+                            if(!songsArray || songsArray.length == 0 || songoffset > 100)
                             {
                                 songSearchFinish = true;
                             }
@@ -67,26 +65,38 @@ MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
 
                                     let res = await axios({
                                         method: 'get',
-                                        url: `http://localhost:3000/album?id=${element.id}`, 
-                                    })
+                                        url: `http://musicapi.leanapp.cn/album?id=${element.id}`, 
+                                    }).catch(e => {console.log(e);});
 
-                                    let songs = res.data.songs;
+                                    
+
+                                    let songs = (res && res.data && res.data.songs) ? res.data.songs : null;
                                     if(!songs)
                                         continue ;
+
+                                    dbase.collection("hotAlbums").insertOne(element, function(err, result) {
+                                        if (err) throw err;
+                                    });
 
                                     for (let index = 0; index < songs.length; index++) {
                                         const element = songs[index];
 
-                                        let res = await axios({
-                                            method: 'get',
-                                            url: `http://localhost:3000/song/url?id=${element.id}`, 
-                                        })
-
-                                        let data = res.data.data[0];
-                    
-                                        dbase.collection("songs").insertOne(data, function(err, result) {
+                                        dbase.collection("song").insertOne(element, function(err, result) {
                                             if (err) throw err;
                                         });
+
+                                        // let res = await axios({
+                                        //     method: 'get',
+                                        //     url: `http://localhost:3000/song/url?id=${element.id}`, 
+                                        // }).catch(e => {
+                                        //     console.log(e);
+                                        // });
+
+                                        // let data = (res && res.data && res.data.data) ? res.data.data[0] : null;  
+                                        // if(data)                  
+                                        //     dbase.collection("songs").insertOne(data, function(err, result) {
+                                        //         if (err) throw err;
+                                        //     });
                                     }
                                 }
                             }
@@ -103,7 +113,4 @@ MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
     
         console.log("mission is finish");
     })();
-
-    // async function getZhuanji(element) {
-    // }
 });

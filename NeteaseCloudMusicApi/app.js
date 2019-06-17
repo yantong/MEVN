@@ -69,12 +69,12 @@ fs.readdirSync(path.join(__dirname, 'module')).reverse().forEach(file => {
         let query = Object.assign({}, req.query, req.body, {cookie: req.cookies})
         question(query, request)
         .then(answer => {
-            console.log('[OK]', decodeURIComponent(req.originalUrl))
+            // console.log('[OK]', decodeURIComponent(req.originalUrl))
             res.append('Set-Cookie', answer.cookie)
             res.status(answer.status).send(answer.body)
         })
         .catch(answer => {
-            console.log('[ERR]', decodeURIComponent(req.originalUrl))
+            // console.log('[ERR]', decodeURIComponent(req.originalUrl))
             if(answer.body.code =='301') answer.body.msg = '需要登录'
             res.append('Set-Cookie', answer.cookie)
             res.status(answer.status).send(answer.body)

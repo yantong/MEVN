@@ -2,34 +2,59 @@
     div.home {
         min-height: 100vh;
         overflow: hidden;
-        background: url('../../assets/login.png');
+        background: linear-gradient(to right, #ffcff9, #79a9ff);
         text-align: center;
-    }
-
-    .head {
-        height: 70px;
-        box-sizing: border-box;
-        background: #242424;
-        border-bottom: 1px solid #000;
+        position: relative;
     }
 
     .content {
         margin: 0 auto;
         width: 980px;
         overflow: hidden;
+    }
+
+    .head, .bottom {
+        height: 70px;
+        box-sizing: border-box;
+        background: #242424;
+        /* border-bottom: 1px solid #000; */
+    }
+
+    .bottom {
+        width: 100%;
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        z-index: 1000;
+    }
+
+    .head .content {
         display:flex;
         justify-content: space-between;
         align-items: center;
         align-content: center;
     }
 
-    /* div.content::before {
+    .bottom .content {
+        margin: 0 auto;
+        width: 980px;
+        height: 100%;
+        overflow: hidden;
+        text-align: left;
+    }
+
+    .bottom .content::before {
         height: 100%;
         width: 0;
         display: inline-block;
         vertical-align: middle;
         content: '';
-    } */
+    }
+
+    .bottom .content audio {
+        display: inline-block;
+        vertical-align: middle;
+    }
 
     .selfData {
         display: inline-block;
@@ -41,6 +66,10 @@
         height: 69px;
         background-position: 0 0;
         background: url('../../assets/topbar.png') no-repeat 0 0;
+    }
+
+    .routerView {
+        padding-bottom: 90px;
     }
 </style>
 
@@ -63,7 +92,12 @@
                 </div>
             </div>
         </div>
-        <router-view></router-view>
+        <router-view class="routerView content" @updateMusicUrl="updateMusicUrl"></router-view>
+        <div class="bottom">
+            <div class="content">
+                <audio :src="musicUrl" autoplay controls></audio>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -75,7 +109,8 @@
       data(){
         return {
             headPicUrl: '',
-            name: ''
+            name: '',
+            musicUrl: ''
         };
       },
       computed: {
@@ -94,6 +129,10 @@
           },
           dropdownItemClick(cmd) {
               this[cmd]();
+          },
+          updateMusicUrl(url) {
+              console.log(url);
+              this.musicUrl = url;
           }
       },
       created() {
