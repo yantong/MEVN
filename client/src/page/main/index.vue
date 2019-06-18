@@ -131,7 +131,6 @@
               this[cmd]();
           },
           updateMusicUrl(url) {
-              console.log(url);
               this.musicUrl = url;
           }
       },

@@ -16,12 +16,29 @@ export const searchSonger = (params) => {
     })
 }
 
-
-export const searchAibum = (params) => {
+export const searchSongerAlbum = (params) => {
     return axios({
         method: 'post',
-        url: '/searchAibum',
+        url: '/searchSongerAlbum',
         data: params
     })
 }
+
+
+export const searchAlbum = (params) => {
+    return axios({
+        method: 'post',
+        url: '/searchAlbum',
+        data: params
+    })
+}
+
+export const searchAlbumMusic = (params) => {
+    return axios({
+        method: 'post',
+        url: '/searchAlbumMusic',
+        data: params
+    })
+}
+
 
